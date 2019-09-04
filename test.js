@@ -58,69 +58,6 @@ PS.Colliders.push( new ColliderCircle( 300, 300, 50 ) );
 // PS.Colliders.push( new ColliderCircle( 100, 300, 50 ) );
 // PS.Colliders.push( new ColliderCircle( 300, 100, 50 ) );
 
-/*
-rect = 
-{
-   posX:550, posY:250, width:50, height:50,
-   graphics: new PIXI.Graphics(),
-
-   draw: function(color)
-   {
-    this.graphics.clear();
-    this.graphics.lineStyle( 1, color, 1, 0 );
-    this.graphics.beginFill(color, 0.1);
-    this.graphics.drawRect(this.posX, this.posY, this.width, this.height);
-    this.graphics.endFill();     
-   },
-   clear: function()
-   {
-    this.graphics.clear();
-   }
-};
-app.stage.addChild(rect.graphics);
-
-rect_to_cast = 
-{
-   posX:550, posY:250, width:50, height:70,
-   graphics: new PIXI.Graphics(),
-   
-   draw: function(color)
-   {
-   
-    this.graphics.clear();
-    this.graphics.lineStyle( 1, color, 1, 0 );
-    this.graphics.beginFill(color, 0.1);
-    this.graphics.drawRect(this.posX, this.posY, this.width, this.height);
-    this.graphics.endFill();     
-   },
-   clear: function()
-   {
-    this.graphics.clear();
-   }
-};
-app.stage.addChild(rect_to_cast.graphics);
-
-hit = 
-{
-   posX:0, posY:0, width:8, height:8,
-   graphics: new PIXI.Graphics(),
-
-   draw: function(color)
-   {
-    this.graphics.clear();
-    this.graphics.lineStyle( 1, color, 1, 0 );
-    this.graphics.beginFill(color,0.1);
-    this.graphics.drawRect(this.posX, this.posY, this.width, this.height);
-    this.graphics.endFill();     
-   },
-   clear: function()
-   {
-    this.graphics.clear();
-   }
-};
-app.stage.addChild(hit.graphics);
-*/
-
 ray = 
 { 
     origin: new Vector2(0,0),
@@ -187,7 +124,7 @@ app.ticker.add(() => {
         PS.Colliders.forEach( c => {
             switch( c.type )
             {
-                case 'rect': gfxColliders.drawRect( c.minX, c.minY, c.getWidth(), c.getHeight() );  break;
+                case 'rect': gfxColliders.drawRect( c.min.x, c.min.y, c.getWidth(), c.getHeight() );  break;
                 case 'circle': gfxColliders.drawCircle( c.pivot.x, c.pivot.y, c.radius ); break;
             }            
         } );        
@@ -199,7 +136,7 @@ app.ticker.add(() => {
         hitPoints.clear();
         hitPoints.beginFill(0xFFFF00,1);
         Results.forEach( r => {
-            hitPoints.drawRect( r.result.interceptX-2, r.result.interceptY-2, 4, 4 );
+            hitPoints.drawRect( r.result.intercept.x-2, r.result.intercept.y-2, 4, 4 );
         } );
         hitPoints.endFill();     
         hitPoints.beginFill(0xFF0000,1);

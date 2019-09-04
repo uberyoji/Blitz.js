@@ -1,9 +1,4 @@
-import * from './src/Entity.js';
-
-import * from './src/Think.js';
-import * from './src/RigidBody.js';
-
-export class Blitz
+class Blitz
 {
     ES = new EntitySystem();
 
