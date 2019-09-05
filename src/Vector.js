@@ -40,6 +40,11 @@ class Vector2 {
 		this.y *= s;
 	}
 
+	ma( v, s ) { // multiply and add
+		this.x += v.x * s;
+		this.y += v.y * s;
+	}
+
 	rotate(a) {
 		let cosa = Math.cos(a);
 		let sina = Math.sin(a);
