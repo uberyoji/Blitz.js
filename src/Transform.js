@@ -1,5 +1,9 @@
+
 class Transform
 {
-    Position = new Vector();
-    Angle=0;
+	constructor()
+	{
+		this.position = new Vector2();
+		this.rotation = 0;
+	}
 }

@@ -1,47 +1,53 @@
+class Entity {
+    constructor( name, params ) {
+        this.name = name;
+        this.transform = new Transform();
+        this.components = { entity: this, 
+                            add: function( component ) {        
+                                    component.entity = this.entity;                 // bind to entity
+                                    this[component.name] = component;               // register component in entity.components
 
-import * from '.src/Transform.js'
+                                    // check if registry for this type exists
+                                    if( Blitz.CS.components[component.name] == undefined )    
+                                        Blitz.CS.components[component.name] = [];
 
-export default class Entity
-{
-    constructor()
-    {
+                                    Blitz.CS.components[component.name].push( component );    // add component to registry
+                            }                            
+                            /* FIXME need a todo at some point to remove components
+                            remove: function( name )
+                            {   
+                                Blitz.CS.components[name].remove( this[name] );
+                                this[name] = null; // ideally remove completely
+                            } */ 
+                           };
+    }
+    
+    start() {
 
     }
-
-    Transform = new Transform();
-    Components = {}
 }
 
-export default class EntitySystem
+class EntitySystem
 {
-    constructor()
-    {
-
+    constructor() {
+        this.entities = [];
+        this.entityMaker = {}
     }
 
-    Entities = [];
-    Creators = {}
-
-    Register( classname, creator )
+    register( classname, maker )
     {
-        this.Creators[classname] = creator;
+        this.entityMaker[classname] = maker;
     }
 
-    Create(classname)
+    create(classname, name, params )
     {
-        let creator = this.Creators[classname];
+        let maker = this.entityMaker[classname];
 
-        if( creator )
+        if( maker )
         {
-            let entity = creator.Create();
-            this.Entities.push(entity);
+            var entity = maker( name, params );
+            this.entities.push(entity);
             return entity;
         }
-    }
-
-    Find(name)
-    {
-        
-    }
+    }    
 }
-

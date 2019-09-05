@@ -1,54 +1,32 @@
-class RigidBody
+class RigidBody extends Component
 {
-    constructor()
-    {
+    constructor( params ) {
+        super("RigidBody");
         
-    }
-    Name = "RigidBody";
-    Entity = null;
-    
-    Mass = 1.0;
-    Force = new Vector();
-    Acceleration = new Vector();
-    Velocity = new Vector();
+        this.Mass = 1.0;
+        this.Force = new Vector2();
+        this.Acceleration = new Vector2();
+        this.Velocity = new Vector2();
 
-    AngularForce = 0;   // torque
-    AngularVelocity = 0;
-    AngularAcceleration = 0;
-    
-    Colliders = [];
+        this.AngularForce = 0;   // torque
+        this.AngularVelocity = 0;
+        this.AngularAcceleration = 0;
+        
+        this.Colliders = [];        
+    }    
 
-    Apply()
+    apply()
     {
         let F = this.Force.clone();
-        F.divide(this.Mass);
+        F.multiply(1.0/this.Mass);
         this.Acceleration = F;
-        this.Velocity.Add(this.Acceleration);
-        this.Entity.Transform.Position.Add(this.Velocity);
+        this.Velocity.add(this.Acceleration);
+        this.entity.transform.position.add(this.Velocity);
 
-        let F = this.AngularForce.clone();
-        F.divide(this.Mass);
-        this.AngularAcceleration = F;
-        this.AngularVelocity.Add(this.AngularAcceleration);
-        this.Entity.Transform.Angle.Add(this.AngularVelocity);
+        let AF = this.AngularForce;
+        AF /= this.Mass;
+        this.AngularAcceleration = AF;
+        this.AngularVelocity += this.AngularAcceleration;
+        this.entity.transform.rotation += this.AngularVelocity;
     }
-}
-
-RegisteredComponents = [];
-
-export function Add( func )
-{
-    this.Components.RigidBody = new RigidBody(this, func);
-    RegisteredComponents.push(this.Components.RigidBody);
-}
-
-export function Remove()
-{   
-    RegisteredComponents = RegisteredComponents.filter( function(value, index, arr) { return value != this.Components.RigidBody; });
-    this.Components.RigidBody = undefined;
-}
-
-export function Apply()
-{
-    RegisteredComponents.array.forEach( c => { c.Apply(); });
 }

@@ -1,0 +1,6 @@
+- recreate Timeline class
+- rework Think component to support nextthink using Timeline
+- add some Vector2 static functions
+- create a Camera component
+- convert camera shake code to Shake component
+- todo add priority property in component to control order of start and update
