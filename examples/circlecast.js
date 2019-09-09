@@ -1,6 +1,41 @@
 const app = new PIXI.Application({ antialias: true });
 document.body.appendChild(app.view);
 
+document.addEventListener('dblclick', () => {	    
+//    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
+    ray.origin.x = mousePosition.x;
+    ray.origin.y = mousePosition.y; 
+} ); 
+
+document.addEventListener( 'click', () => {	    
+//    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
+//    updateRay = !updateRay;
+} ); 
+
+var mouseDown = false;
+
+document.addEventListener('mousedown', () => {	    
+    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
+    caster.origin.x = mousePosition.x;
+    caster.origin.y = mousePosition.y; 
+    mouseDown = true;
+}, false ); 
+
+document.addEventListener('mouseup', () => {	    
+    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
+    mouseDown = false;
+}, false ); 
+
+document.addEventListener( 'mousemove', () => {	    
+    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
+    let button = app.renderer.plugins.interaction.mouse.button;
+    if( mouseDown )
+    {
+        caster.distance.x = mousePosition.x - ray.origin.x;
+        caster.distance.y = mousePosition.y - ray.origin.y;
+    }
+}, false ); 
+
 var PS = new PhysicsSystem();
 
 const ColliderCount = 8;
@@ -16,28 +51,40 @@ for( let i=0;i<ColliderCount; i++)
     else
         PS.Colliders.push( new ColliderCircle( x, y, 50 ) );
 }
-
-ray = 
+const casterSize = 32;
+caster = 
 { 
     origin: ColliderCenter,
     distance: new Vector2(512,512),
+//    rect: new Rect( new Vector2(-casterSize/2,-casterSize/2), new Vector2(casterSize/2,casterSize/2) ),
+    circle: new Circle( new Vector2(0,0), casterSize ),
     graphics: new PIXI.Graphics(),
 
     draw: function( color )
     {
         this.graphics.clear();
         this.graphics.lineStyle( 1, color, 1, 0 );
+        
+        // ray
         this.graphics.moveTo(this.origin.x,this.origin.y);
         this.graphics.lineTo(this.origin.x+this.distance.x, this.origin.y+this.distance.y);
         this.graphics.closePath();
+
+        // origin shape
+        this.graphics.beginFill(color,0.1);
+        if( this.rect )
+            this.graphics.drawRect( this.origin.x+this.rect.min.x, this.origin.y+this.rect.min.y, this.rect.getWidth(), this.rect.getHeight() );
+        else if( this.circle )
+            this.graphics.drawCircle( this.origin.x, this.origin.y, this.circle.radius );
+                
+        this.graphics.endFill();
     },
     clear: function()
     {
      this.graphics.clear();
     }
 };
-
-app.stage.addChild(ray.graphics);
+app.stage.addChild(caster.graphics);
 
 function classify( hit )
 {
@@ -54,63 +101,72 @@ function classify( hit )
     return "no side";
 }
 
-var hitPoints = new PIXI.Graphics();
-app.stage.addChild(hitPoints);
-
 var rayRotation = 0;
 const rayRotationSpeed = 0.005;
-
-const rectCasterSize = 16;
-var rectCaster = new Rect( new Vector2(-rectCasterSize,-rectCasterSize), new Vector2(rectCasterSize,rectCasterSize) );
 
 app.ticker.add(() => {
 
     // update ray
     rayRotation += rayRotationSpeed;
-    ray.distance.x = Math.cos( rayRotation ) * ColliderDistance * 2;
-    ray.distance.y = Math.sin( rayRotation ) * ColliderDistance * 2;
+    caster.distance.x = Math.cos( rayRotation ) * ColliderDistance * 2;
+    caster.distance.y = Math.sin( rayRotation ) * ColliderDistance * 2;
 
-    var Results = PS.rectCast( ray.origin, ray.distance, rectCaster, 0xFFFFFFFF );
-
-    let R = rectCaster.clone().offset( ray.origin );
+    // cast and find hits
+    var Results;
+    if( caster.rect )  
+        Results = PS.rectCast( caster, 0xFFFFFFFF );
+    else if( caster.circle )  
+        Results = PS.circleCast( caster, 0xFFFFFFFF );
+    else
+        Results = PS.rayCast( caster, 0xFFFFFFFF );
 
     // draw all colliders
-    {
-        gfxColliders.clear();
-        gfxColliders.lineStyle( 1, 0xFFFFFF, 1, 0 );
-        gfxColliders.beginFill( 0xFFFFFF, 0.1);
-        PS.Colliders.forEach( c => {
-            switch( c.type )
-            {
-                case 'rect': gfxColliders.drawRect( c.rect.min.x, c.rect.min.y, c.rect.getWidth(), c.rect.getHeight() );  break;
-                case 'circle': gfxColliders.drawCircle( c.pivot.x, c.pivot.y, c.radius ); break;
-            }            
-        } ); 
-        
-        gfxColliders.drawRect( R.min.x, R.min.y, R.getWidth(), R.getHeight() );
-        
-        gfxColliders.endFill();
-    }
+    drawColliders();
 
     // draw ray hits
-    {
-        hitPoints.clear();
-        hitPoints.beginFill(0xFFFF00,1);
-        Results.forEach( r => {
-            hitPoints.drawRect( r.result.intercept.x- R.getWidth()/2, r.result.intercept.y- R.getHeight()/2, R.getWidth(), R.getHeight() );
-        } );
-        hitPoints.endFill();     
-        hitPoints.beginFill(0xFF0000,1);
-        Results.forEach( r => {
-            hitPoints.drawRect( r.collider.pivot.x-8, r.collider.pivot.y-8, 16, 16 );
-        } );
-        hitPoints.endFill();
-    }
+    drawResult( Results );
     
     // draw ray
-    ray.draw( Results.length > 0 ? 0xFF0000 : 0x00FF00 );    
+    caster.draw( Results.length > 0 ? 0xFF0000 : 0x00FF00 );    
 });
 
+// results
+var gfxResults = new PIXI.Graphics();
+app.stage.addChild(gfxResults);
+
+function drawResult( Results )
+{
+    gfxResults.clear();
+
+    gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
+    gfxResults.beginFill(0xFF0000,0.1);
+
+    if( caster.rect ) { // rect hit       
+        Results.forEach( r => {
+            gfxResults.drawRect( r.result.intercept.x+caster.rect.min.x, r.result.intercept.y+caster.rect.min.y, caster.rect.getWidth(), caster.rect.getHeight() );
+        } );
+    }
+    else if ( caster.circle ) { // circle hit
+        Results.forEach( r => {
+            gfxResults.drawCircle( r.result.intercept.x, r.result.intercept.y, caster.circle.radius, caster.circle.radius );
+        } );
+    }
+    else { // ray hit
+        Results.forEach( r => {
+            gfxResults.drawRect( r.result.intercept.x-2, r.result.intercept.y-2, 4, 4 );
+        } );
+    }
+    gfxResults.endFill();
+
+    // mark hit colliders with star
+    gfxResults.beginFill(0xFF0000,0.1);
+    Results.forEach( r => {
+        gfxResults.drawStar( r.collider.pivot.x, r.collider.pivot.y, 4, 32, 16, 0 );
+    } );
+    gfxResults.endFill();
+}
+
+// colliders
 var gfxColliders = new PIXI.Graphics();
 app.stage.addChild(gfxColliders);
 

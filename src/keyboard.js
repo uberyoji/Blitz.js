@@ -34,7 +34,12 @@ function mapkey(keyCode)
   return key;
 }
 
+
 /*
+
+// see https://keycode.info/
+
+
 //Left arrow key `press` method
 keyboard.left.press = () => { console.log("left.press"); };
 

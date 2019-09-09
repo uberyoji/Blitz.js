@@ -38,11 +38,13 @@ class Vector2 {
 	multiply( s ) {
 		this.x *= s;
 		this.y *= s;
+		return this;
 	}
 
 	ma( v, s ) { // multiply and add
 		this.x += v.x * s;
 		this.y += v.y * s;
+		return this;
 	}
 
 	rotate(a) {
@@ -65,7 +67,7 @@ class Vector2 {
 	}
 
 	normalize() {
-		return this.scale( 1.0 / this.length() );
+		return this.multiply( 1.0 / this.length() );
 	}
 
 	dotProduct( v )

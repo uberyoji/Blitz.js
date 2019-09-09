@@ -4,6 +4,7 @@ var demoList = [
     { name:"Raycast", file:"/examples/raycast.js" },
     { name:"Rectcast", file:"/examples/rectcast.js" },
     { name:"Circlecast", file:"/examples/circlecast.js" },
+    { name:"Ray Marching", file:"/examples/raymarch.js" },
   ];
 
 const demoListNode = document.getElementById("demoList")
@@ -25,6 +26,7 @@ const htmlTemplate = `
   </head>
   <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.2/pixi.min.js"></script>
+  <script src="/src/keyboard.js"></script>
   <script src="/src/vector.js"></script>
   <script src="/src/transform.js"></script>
   <script src="/src/physics.js"></script>

@@ -1,17 +1,6 @@
 const app = new PIXI.Application({ antialias: true });
 document.body.appendChild(app.view);
 
-document.addEventListener('dblclick', () => {	    
-//    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
-    ray.origin.x = mousePosition.x;
-    ray.origin.y = mousePosition.y; 
-} ); 
-
-document.addEventListener( 'click', () => {	    
-//    let mousePosition = app.renderer.plugins.interaction.mouse.global; 
-//    updateRay = !updateRay;
-} ); 
-
 var mouseDown = false;
 
 document.addEventListener('mousedown', () => {	    
@@ -31,12 +20,14 @@ document.addEventListener( 'mousemove', () => {
     let button = app.renderer.plugins.interaction.mouse.button;
     if( mouseDown )
     {
-        caster.distance.x = mousePosition.x - ray.origin.x;
-        caster.distance.y = mousePosition.y - ray.origin.y;
+        caster.distance.x = mousePosition.x - caster.origin.x;
+        caster.distance.y = mousePosition.y - caster.origin.y;
     }
 }, false ); 
 
 var PS = new PhysicsSystem();
+
+var RM = new RayMarcher(PS);
 
 const ColliderCount = 8;
 const ColliderDistance = 256;
@@ -51,13 +42,13 @@ for( let i=0;i<ColliderCount; i++)
     else
         PS.Colliders.push( new ColliderCircle( x, y, 50 ) );
 }
-const casterSize = 32;
+const casterSize = 16;
 caster = 
 { 
     origin: ColliderCenter,
     distance: new Vector2(512,512),
-    rect: new Rect( new Vector2(-casterSize/2,-casterSize/2), new Vector2(casterSize/2,casterSize/2) ),
-//    circle: new Circle( new Vector2(0,0), casterSize ),
+//    rect: new Rect( new Vector2(-casterSize/2,-casterSize/2), new Vector2(casterSize/2,casterSize/2) ),
+    circle: new Circle( new Vector2(0,0), casterSize ),
     graphics: new PIXI.Graphics(),
 
     draw: function( color )
@@ -104,21 +95,31 @@ function classify( hit )
 var rayRotation = 0;
 const rayRotationSpeed = 0.005;
 
+var autoUpdateRay = false;
+
+var keyboard = {
+    space: mapkey(32),
+}
+
+keyboard.space.press = () => { autoUpdateRay = !autoUpdateRay; };
+
 app.ticker.add(() => {
 
     // update ray
-    rayRotation += rayRotationSpeed;
-    caster.distance.x = Math.cos( rayRotation ) * ColliderDistance * 2;
-    caster.distance.y = Math.sin( rayRotation ) * ColliderDistance * 2;
+    if( autoUpdateRay ) {
+        rayRotation += rayRotationSpeed;
+        caster.distance.x = Math.cos( rayRotation ) * ColliderDistance * 2;
+        caster.distance.y = Math.sin( rayRotation ) * ColliderDistance * 2;
+    }   
 
     // cast and find hits
     var Results;
     if( caster.rect )  
         Results = PS.rectCast( caster, 0xFFFFFFFF );
     else if( caster.circle )  
-        Results = PS.circleCast( caster, 0xFFFFFFFF );
+        Results = RM.circleMarch( caster, 0xFFFFFFFF );
     else
-        Results = PS.rayCast( caster, 0xFFFFFFFF );
+        Results = RM.rayMarch( caster, 0xFFFFFFFF );
 
     // draw all colliders
     drawColliders();
@@ -138,24 +139,38 @@ function drawResult( Results )
 {
     gfxResults.clear();
 
-    gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
-    gfxResults.beginFill(0xFF0000,0.1);
-
     if( caster.rect ) { // rect hit       
+        gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
+        gfxResults.beginFill(0xFF0000,0.1);
         Results.forEach( r => {
             gfxResults.drawRect( r.result.intercept.x+caster.rect.min.x, r.result.intercept.y+caster.rect.min.y, caster.rect.getWidth(), caster.rect.getHeight() );
         } );
+        gfxResults.closePath();
+        gfxResults.endFill();
     }
     else if ( caster.circle ) { // circle hit
+        gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
+        gfxResults.beginFill(0xFF0000,0.1);
         Results.forEach( r => {
             gfxResults.drawCircle( r.result.intercept.x, r.result.intercept.y, caster.circle.radius, caster.circle.radius );
         } );
+        gfxResults.closePath();
+        gfxResults.endFill();
     }
     else { // ray hit
+        gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
         Results.forEach( r => {
-            gfxResults.drawRect( r.result.intercept.x-2, r.result.intercept.y-2, 4, 4 );
+
+            gfxResults.moveTo( r.result.intercept.x-16, r.result.intercept.y);
+            gfxResults.lineTo( r.result.intercept.x+16, r.result.intercept.y);
+            gfxResults.moveTo( r.result.intercept.x, r.result.intercept.y-16);
+            gfxResults.lineTo( r.result.intercept.x, r.result.intercept.y+16);
+
+            gfxResults.drawRect( r.result.intercept.x-4, r.result.intercept.y-4, 8, 8 );
         } );
+        gfxResults.closePath();    
     }
+    gfxResults.closePath();
     gfxResults.endFill();
 
     // mark hit colliders with star
@@ -184,3 +199,4 @@ function drawColliders()
     } ); 
     gfxColliders.endFill();
 }
+

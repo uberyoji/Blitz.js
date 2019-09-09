@@ -57,7 +57,7 @@ caster =
     origin: ColliderCenter,
     distance: new Vector2(512,512),
 //    rect: new Rect( new Vector2(-casterSize/2,-casterSize/2), new Vector2(casterSize/2,casterSize/2) ),
-    circle: new Circle( new Vector2(0,0), casterSize ),
+//    circle: new Circle( new Vector2(0,0), casterSize ),
     graphics: new PIXI.Graphics(),
 
     draw: function( color )
@@ -138,24 +138,38 @@ function drawResult( Results )
 {
     gfxResults.clear();
 
-    gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
-    gfxResults.beginFill(0xFF0000,0.1);
-
     if( caster.rect ) { // rect hit       
+        gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
+        gfxResults.beginFill(0xFF0000,0.1);
         Results.forEach( r => {
             gfxResults.drawRect( r.result.intercept.x+caster.rect.min.x, r.result.intercept.y+caster.rect.min.y, caster.rect.getWidth(), caster.rect.getHeight() );
         } );
+        gfxResults.closePath();
+        gfxResults.endFill();
     }
     else if ( caster.circle ) { // circle hit
+        gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
+        gfxResults.beginFill(0xFF0000,0.1);
         Results.forEach( r => {
             gfxResults.drawCircle( r.result.intercept.x, r.result.intercept.y, caster.circle.radius, caster.circle.radius );
         } );
+        gfxResults.closePath();
+        gfxResults.endFill();
     }
     else { // ray hit
+        gfxResults.lineStyle( 1, 0xFF0000, 1, 0 );
         Results.forEach( r => {
-            gfxResults.drawRect( r.result.intercept.x-2, r.result.intercept.y-2, 4, 4 );
+
+            gfxResults.moveTo( r.result.intercept.x-16, r.result.intercept.y);
+            gfxResults.lineTo( r.result.intercept.x+16, r.result.intercept.y);
+            gfxResults.moveTo( r.result.intercept.x, r.result.intercept.y-16);
+            gfxResults.lineTo( r.result.intercept.x, r.result.intercept.y+16);
+
+            gfxResults.drawRect( r.result.intercept.x-4, r.result.intercept.y-4, 8, 8 );
         } );
+        gfxResults.closePath();    
     }
+    gfxResults.closePath();
     gfxResults.endFill();
 
     // mark hit colliders with star
