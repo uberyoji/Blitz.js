@@ -29,6 +29,7 @@ const htmlTemplate = `
   <script src="/src/keyboard.js"></script>
   <script src="/src/vector.js"></script>
   <script src="/src/transform.js"></script>
+  <script src="/src/collider.js"></script>
   <script src="/src/physics.js"></script>
   <script src="/src/entity.js"></script>
   <script src="/src/component.js"></script>

@@ -36,19 +36,23 @@ for( let i=0;i<ColliderCount; i++)
 {
     let x = ColliderCenter.x + Math.cos( 2.0 * Math.PI * i / ColliderCount ) * ColliderDistance;
     let y = ColliderCenter.y + Math.sin( 2.0 * Math.PI * i / ColliderCount ) * ColliderDistance;
-
-    if( i%2 )
+ 
+    if( i % 2 ) {
         PS.Colliders.push( new ColliderRect( x, y, 50, 50 ) );
-    else
+    }
+    else {
         PS.Colliders.push( new ColliderCircle( x, y, 50 ) );
+//        PS.Colliders[PS.Colliders.length-1].mask = 0;
+    }
+
 }
-const casterSize = 16;
+const casterSize = 32;
 caster = 
 { 
     origin: ColliderCenter,
     distance: new Vector2(512,512),
-//    rect: new Rect( new Vector2(-casterSize/2,-casterSize/2), new Vector2(casterSize/2,casterSize/2) ),
-    circle: new Circle( new Vector2(0,0), casterSize ),
+    rect: new Rect( new Vector2(-casterSize/2,-casterSize/2), new Vector2(casterSize/2,casterSize/2) ),
+//    circle: new Circle( new Vector2(0,0), casterSize ),
     graphics: new PIXI.Graphics(),
 
     draw: function( color )
@@ -98,10 +102,10 @@ const rayRotationSpeed = 0.005;
 var autoUpdateRay = false;
 
 var keyboard = {
-    space: mapkey(32),
+    shift: mapkey(16),
 }
 
-keyboard.space.press = () => { autoUpdateRay = !autoUpdateRay; };
+keyboard.shift.press = () => { autoUpdateRay = !autoUpdateRay; };
 
 app.ticker.add(() => {
 
@@ -115,7 +119,7 @@ app.ticker.add(() => {
     // cast and find hits
     var Results;
     if( caster.rect )  
-        Results = PS.rectCast( caster, 0xFFFFFFFF );
+        Results = RM.rectMarch( caster, 0xFFFFFFFF );
     else if( caster.circle )  
         Results = RM.circleMarch( caster, 0xFFFFFFFF );
     else
