@@ -5,6 +5,8 @@ var demoList = [
     { name:"Rectcast", file:"/examples/rectcast.js" },
     { name:"Circlecast", file:"/examples/circlecast.js" },
     { name:"Ray Marching", file:"/examples/raymarch.js" },
+    { name:"Ray Marching", file:"/examples/collisions.js" },
+    { name:"Keyframe Animation", file:"/examples/anim.js" },
   ];
 
 const demoListNode = document.getElementById("demoList")
@@ -28,11 +30,12 @@ const htmlTemplate = `
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.2/pixi.min.js"></script>
   <script src="/src/keyboard.js"></script>
   <script src="/src/vector.js"></script>
-  <script src="/src/transform.js"></script>
-  <script src="/src/collider.js"></script>
+  <script src="/src/transform.js"></script>  
   <script src="/src/physics.js"></script>
   <script src="/src/entity.js"></script>
   <script src="/src/component.js"></script>
+  <script src="/src/animation.js"></script>
+  <script src="/src/collider.js"></script>
   <script src="/src/rigidbody.js"></script>
   <script src="/src/think.js"></script>
   <script src="/src/pixi/gfx.js"></script>

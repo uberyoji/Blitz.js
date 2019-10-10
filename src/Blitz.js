@@ -37,8 +37,18 @@ class Blitz
         Blitz.Pixi = this.pixiApp;
         Blitz.RootScene = this.RootScene;
 
+        // fixme precreate components
+        this.CS.components.Think = [];
+        this.CS.components.Animator = [];
+        this.CS.components.RigidBody = [];
+        this.CS.components.PixiText = [];
+        this.CS.components.PixiSprite = [];
+        this.CS.components.PixiGraphics = [];
+
+        // let entities create their components
         this.ES.entities.forEach( e => { e.start(); } );    // call start on each entity
-        
+
+        // create their components
         for( var cr in this.CS.components ) 
         { 
             this.CS.components[cr].forEach( c => { c.start(); } );
@@ -48,6 +58,7 @@ class Blitz
     update()
     {
         this.CS.components.Think.forEach( c => { c.apply() });        
+        this.CS.components.Animator.forEach( c => { c.apply() });
         this.CS.components.RigidBody.forEach( c => { c.apply() });
         this.CS.components.PixiText.forEach( c => { c.apply() });
         this.CS.components.PixiSprite.forEach( c => { c.apply() });

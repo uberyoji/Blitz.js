@@ -1,5 +1,6 @@
-class Collider {
-	constructor( x,y ) {
+class Collider extends Component {
+	constructor( name, x, y ) {
+		super("Collider");
 		this.pivot = new Vector2(x,y);
 		this.mask = 0xFFFFFFFF;
 		this.type = 'point';
@@ -77,8 +78,7 @@ class Rect {
 		return false; //FIXME: missing
     }
     
-    getDistance( point )
-	{
+    getDistance( point ) {
 		let p = point;
 
 		let d = new Vector2( Math.abs(p.x)-this.getWidth()/2, Math.abs(p.y)-this.getHeight()/2);
@@ -91,7 +91,7 @@ class Rect {
 
 class ColliderRect extends Collider {
 	constructor( x,y,w,h ) {
-		super(x,y);
+		super("ColliderRect",x,y);
 		this.localRect = new Rect( new Vector2( -w/2, -h/2 ),	//FIXME assuming center
 								new Vector2( w/2, h/2 ) );
 		this.rect = this.localRect.clone();
@@ -138,12 +138,16 @@ class Circle
 	}
 	overlapCircle( circle ) {
 		return (circle.pivot.clone().subtract(this.pivot).lengthSquared() < (this.radius+circle.radius)**2);
-	}
+    }
+    
+    getDistance( point ) {
+        return point.clone().subtract(this.position).length() - this.radius;
+    }
 }
 
 class ColliderCircle extends Collider {
 	constructor( x,y,r ) {
-		super(x,y);
+		super( "ColliderCircle",x,y);
 		this.radius = r;
 		this.type = 'circle';
 		this.circle = new Circle( this.pivot, this.radius );
