@@ -29,20 +29,20 @@ const htmlTemplate = `
   <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.2/pixi.min.js"></script>
   <script src="/src/keyboard.js"></script>
-  <script src="/src/vector.js"></script>
-  <script src="/src/transform.js"></script>  
+  <script src="/src/Vector.js"></script>
+  <script src="/src/Transform.js"></script>  
   <script src="/src/physics.js"></script>
-  <script src="/src/entity.js"></script>
+  <script src="/src/Entity.js"></script>
   <script src="/src/component.js"></script>
   <script src="/src/animation.js"></script>
-  <script src="/src/collider.js"></script>
+  <script src="/src/Collider.js"></script>
   <script src="/src/raymarcher.js"></script>
-  <script src="/src/rigidbody.js"></script>
-  <script src="/src/think.js"></script>
+  <script src="/src/RigidBody.js"></script>
+  <script src="/src/Think.js"></script>
   <script src="/src/pixi/gfx.js"></script>
   <script src="/src/pixi/text.js"></script>
   <script src="/src/pixi/sprite.js"></script>
-  <script src="/src/blitz.js"></script> 
+  <script src="/src/Blitz.js"></script> 
   <script src="?"></script>
   </body>
   </html>`;
