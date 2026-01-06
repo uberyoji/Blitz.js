@@ -28,21 +28,21 @@ const htmlTemplate = `
   </head>
   <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.2/pixi.min.js"></script>
-  <script src="/src/keyboard.js"></script>
-  <script src="/src/Vector.js"></script>
-  <script src="/src/Transform.js"></script>  
-  <script src="/src/physics.js"></script>
-  <script src="/src/Entity.js"></script>
-  <script src="/src/component.js"></script>
-  <script src="/src/animation.js"></script>
-  <script src="/src/Collider.js"></script>
-  <script src="/src/raymarcher.js"></script>
-  <script src="/src/RigidBody.js"></script>
-  <script src="/src/Think.js"></script>
-  <script src="/src/pixi/gfx.js"></script>
-  <script src="/src/pixi/text.js"></script>
-  <script src="/src/pixi/sprite.js"></script>
-  <script src="/src/Blitz.js"></script> 
+  <script src="../src/keyboard.js"></script>
+  <script src="../src/Vector.js"></script>
+  <script src="../src/Transform.js"></script>  
+  <script src="../src/physics.js"></script>
+  <script src="../src/Entity.js"></script>
+  <script src="../src/component.js"></script>
+  <script src="../src/animation.js"></script>
+  <script src="../src/Collider.js"></script>
+  <script src="../src/raymarcher.js"></script>
+  <script src="../src/RigidBody.js"></script>
+  <script src="../src/Think.js"></script>
+  <script src="../src/pixi/gfx.js"></script>
+  <script src="../src/pixi/text.js"></script>
+  <script src="../src/pixi/sprite.js"></script>
+  <script src="../src/Blitz.js"></script> 
   <script src="?"></script>
   </body>
   </html>`;
