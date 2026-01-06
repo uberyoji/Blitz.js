@@ -16,7 +16,7 @@ class Banana extends Entity {
         this.transform.position.x = 200;
         this.transform.position.y = 200;
 
-        this.components.add( new PixiSprite( { scene: blitz.RootScene, filename:'/examples/assets/bananas.png' } ) );
+        this.components.add( new PixiSprite( { scene: blitz.RootScene, filename:'assets/bananas.png' } ) );
 
         // rigidbody
         this.components.add( new Animator( {} ) );
@@ -34,7 +34,7 @@ document.addEventListener( 'click', (event) => {
 } ); 
 
 blitz
-    .precacheAssets( ['/examples/assets/bananas.png','/examples/assets/lemon.png','/examples/assets/orange.png' ] )
+    .precacheAssets( ['assets/bananas.png','assets/lemon.png','assets/orange.png' ] )
     .loadAssets( () => { 
         blitz.start();
         blitz.pixiApp.ticker.add((delta) => { frame(delta); } );     // Listen for animate update
