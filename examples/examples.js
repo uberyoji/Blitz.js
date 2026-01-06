@@ -36,6 +36,7 @@ const htmlTemplate = `
   <script src="/src/component.js"></script>
   <script src="/src/animation.js"></script>
   <script src="/src/collider.js"></script>
+  <script src="/src/raymarcher.js"></script>
   <script src="/src/rigidbody.js"></script>
   <script src="/src/think.js"></script>
   <script src="/src/pixi/gfx.js"></script>
