@@ -1,12 +1,12 @@
 // setup demo list
 var demoList = [
-    { name:"Boot", file:"/examples/boot.js" },
-    { name:"Raycast", file:"/examples/raycast.js" },
-    { name:"Rectcast", file:"/examples/rectcast.js" },
-    { name:"Circlecast", file:"/examples/circlecast.js" },
-    { name:"Ray Marching", file:"/examples/raymarch.js" },
-    { name:"Ray Marching", file:"/examples/collisions.js" },
-    { name:"Keyframe Animation", file:"/examples/anim.js" },
+    { name:"Boot", file:"boot.js" },
+    { name:"Raycast", file:"raycast.js" },
+    { name:"Rectcast", file:"rectcast.js" },
+    { name:"Circlecast", file:"circlecast.js" },
+    { name:"Ray Marching", file:"raymarch.js" },
+    { name:"Ray Marching", file:"collisions.js" },
+    { name:"Keyframe Animation", file:"anim.js" },
   ];
 
 const demoListNode = document.getElementById("demoList")
